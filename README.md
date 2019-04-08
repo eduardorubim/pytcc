@@ -2,8 +2,10 @@
 
 ## Dependências
 [gTTS](https://gtts.readthedocs.io/en/latest/#) e dependências.
+
 [playsound](https://pypi.org/project/playsound/) e dependências.
-[SpeechRecognition]https://pypi.org/project/SpeechRecognition/ e dependências.
+
+[SpeechRecognition](https://pypi.org/project/SpeechRecognition/) e dependências.
 
 ## Módulo TTS em MAC OS X
 
