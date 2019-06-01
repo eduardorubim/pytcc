@@ -7,6 +7,10 @@
 
 [SpeechRecognition](https://pypi.org/project/SpeechRecognition/) e dependências.
 
+[dialogflow](https://dialogflow-python-client-v2.readthedocs.io/en/latest/).
+
+google-api-core
+
 ## Módulo TTS em MAC OS X
 
 O módulo playsound depende do módulo da AppKit.NSSound contido na biblioteca PyObjC. Não confundir com [AppKit](https://appkit.readthedocs.io/en/latest/index.html).
