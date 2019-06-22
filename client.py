@@ -37,8 +37,8 @@ class CLIENT:
         self.GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file('credentials/smart-home-1-6c30f-b1024858ceb7.json')
         self.SESSION_ID = 'tcc-chatbot'
         
-        self.session_client = dialogflow.SessionsClient(credentials=GOOGLE_APPLICATION_CREDENTIALS)
-        self.session = session_client.session_path(DIALOGFLOW_PROJECT_ID, SESSION_ID)
+        self.session_client = dialogflow.SessionsClient(credentials=self.GOOGLE_APPLICATION_CREDENTIALS)
+        self.session = self.session_client.session_path(self.DIALOGFLOW_PROJECT_ID, self.SESSION_ID)
      
          
     def greet(self):
@@ -62,8 +62,8 @@ class CLIENT:
                 print("nada reconhecido")
                 continue
             else:
-                text_input = dialogflow.types.TextInput(text=text_to_be_analyzed, language_code=self.DIALOGFLOW_LANGUAGE_CODE)
-                query_input = dialogflow.types.QueryInput(text=text_input)  
+                text_input = dialogflow.TextInput(text=text_to_be_analyzed, language_code=self.DIALOGFLOW_LANGUAGE_CODE)
+                query_input = dialogflow.QueryInput(text=text_input)  
                 try:
                     response = self.session_client.detect_intent(session=self.session, query_input=query_input)
                 except InvalidArgument:
