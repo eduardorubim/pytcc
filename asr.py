@@ -21,7 +21,7 @@ class ASR:
         model_path = get_model_path()
         #data_path = get_data_path()
 
-        config.set_string('-logfn', path.joing(client_dir,'log/pocketsphinx.log'))
+        config.set_string('-logfn', path.join(client_dir,'log/pocketsphinx.log'))
         #config.set_string('-hmm', path.join(model_dir, 'en-US', 'acoustic-model'))
         config.set_string('-hmm', path.join(model_path, 'en-us')) # (msm sem pt, é só para "Minerva")
         config.set_string('-dict', path.join(model_path, 'cmudict-en-us.dict'))
@@ -37,17 +37,17 @@ class ASR:
 
 
     def listen():
-        mp = sr.Recognizer()
-        with sr.Microphone() as source:
-            mp.adjust_for_ambient_noise(source)
+        global sr
+        with speech_recognition.Microphone() as source:
+            sr.adjust_for_ambient_noise(source)
             print("Ouvindo... ")
             playsound("double-beep.mp3")
-            audio = mp.listen(source)
+            audio = sr.listen(source)
             phrase = ''
 
         try:
-            phrase = mp.recognize_google(audio, language='pt-BR')
-        except sr.UnknownValueError:
+            phrase = sr.recognize_google(audio, language='pt-BR')
+        except speech_recognition.UnknownValueError:
             print("Não entendi")
         finally:
             return phrase    
