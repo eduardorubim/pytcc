@@ -9,6 +9,8 @@
 
 [dialogflow](https://dialogflow-python-client-v2.readthedocs.io/en/latest/).
 
+[pocketsphinx](https://pypi.org/project/pocketsphinx/).
+
 google-api-core
 
 ## Módulo TTS em MAC OS X
