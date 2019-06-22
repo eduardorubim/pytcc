@@ -2,7 +2,8 @@
 
 ## Dependências
 Garanta que [SWIG esteja instalado corretamento no seu sistema](https://www.dev2qa.com/how-to-install-swig-on-macos-linux-and-windows/).
-[Crie e ative um ambiente virtual](https://docs.python.org/3/tutorial/venv.html) do Python. Depois instale a(s) dependência(s):
+
+Depois [crie e ative um ambiente virtual](https://docs.python.org/3/tutorial/venv.html) do Python. Depois instale a(s) dependência(s):
 
 ```sh
 $ pip install -r requirements.txt
