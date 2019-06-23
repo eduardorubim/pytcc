@@ -1,24 +1,14 @@
 # pytcc
 
 ## Dependências
-[gTTS](https://gtts.readthedocs.io/en/latest/#) e dependências.
+Garanta que [SWIG esteja instalado corretamento no seu sistema](https://www.dev2qa.com/how-to-install-swig-on-macos-linux-and-windows/).
 
-[playsound](https://pypi.org/project/playsound/) e dependências.
+Depois [crie e ative um ambiente virtual](https://docs.python.org/3/tutorial/venv.html) do Python. Depois instale a(s) dependência(s):
 
-[SpeechRecognition](https://pypi.org/project/SpeechRecognition/) e dependências.
-
-[dialogflow](https://dialogflow-python-client-v2.readthedocs.io/en/latest/).
-
-[pocketsphinx](https://pypi.org/project/pocketsphinx/).
-
-google-api-core
+```sh
+$ pip install -r requirements.txt
+```
 
 ## Módulo TTS em MAC OS X
 
-O módulo playsound depende do módulo da AppKit.NSSound contido na biblioteca PyObjC. Não confundir com [AppKit](https://appkit.readthedocs.io/en/latest/index.html).
-
-[Crie e ative um ambiente virtual](https://docs.python.org/3/tutorial/venv.html) do Python. Depois instale a(s) dependência(s). E.g.:
-
-```sh
-$ pip install -U pyobjc
-```
+Para sistemas MAC OS X, o módulo playsound depende do módulo da AppKit.NSSound contido na biblioteca PyObjC.
