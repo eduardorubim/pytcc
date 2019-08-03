@@ -1,0 +1,9 @@
+*.DS_Store
+.idea/
+*.pyc
+/binding/dotnet/PorcupineCS/obj
+/binding/dotnet/.vs/PorcupineCS
+/binding/dotnet/PorcupineCS/bin
+/binding/dotnet/PorcupineTest/bin
+/binding/dotnet/PorcupineTest/obj
+demo/ios/PorcupineDemoNoWatch.xcodeproj/xcshareddata/
