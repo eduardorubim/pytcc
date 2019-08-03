@@ -1,4 +1,5 @@
-from client import CLIENT
+from src.client import Client
 # config
-CLIENT.init()
-CLIENT.inst.run()
+client = Client()
+
+client.run()
