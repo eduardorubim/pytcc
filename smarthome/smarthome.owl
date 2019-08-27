@@ -1,363 +1,163 @@
 <?xml version="1.0"?>
-<Ontology xmlns="http://www.w3.org/2002/07/owl#"
-     xml:base="http://www.semanticweb.org/rmyamguchi/ontologies/2019/7/smarthome.owl"
-     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:xml="http://www.w3.org/XML/1998/namespace"
-     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     ontologyIRI="http://www.semanticweb.org/rmyamguchi/ontologies/2019/7/smarthome.owl">
-    <Prefix name="" IRI="http://www.semanticweb.org/rmyamguchi/ontologies/2019/7/smarthome.owl"/>
-    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
-    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
-    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
-    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
-    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
-    <Annotation>
-        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
-        <Literal>A smarthome ontology</Literal>
-    </Annotation>
-    <Declaration>
-        <Class IRI="#IndoorPlace"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#OutdoorPlace"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#Place"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#SmartDevice"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty IRI="#hasSmartDevice"/>
-    </Declaration>
-    <Declaration>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#isNamed"/>
-    </Declaration>
-    <Declaration>
-        <DataProperty IRI="#isOn"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#Bathroom"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#BathroomLight1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#Bedroom1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#Bedroom1Light1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#Bedroom2"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#Bedroom2Light1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#DiningRoom"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#DiningRoomLight1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#Garage"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#GarageLight1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#Garden"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#GardenLight1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#Kitchen"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#KitchenLight1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#LivingRoom"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#LivingRoomLight1"/>
-    </Declaration>
-    <Declaration>
-        <NamedIndividual IRI="#LivingRoomLight2"/>
-    </Declaration>
-    <SubClassOf>
-        <Class IRI="#IndoorPlace"/>
-        <Class IRI="#Place"/>
-    </SubClassOf>
-    <SubClassOf>
-        <Class IRI="#OutdoorPlace"/>
-        <Class IRI="#Place"/>
-    </SubClassOf>
-    <DisjointClasses>
-        <Class IRI="#IndoorPlace"/>
-        <Class IRI="#OutdoorPlace"/>
-    </DisjointClasses>
-    <DisjointClasses>
-        <Class IRI="#Place"/>
-        <Class IRI="#SmartDevice"/>
-    </DisjointClasses>
-    <DisjointUnion>
-        <Class IRI="#Place"/>
-        <Class IRI="#IndoorPlace"/>
-        <Class IRI="#OutdoorPlace"/>
-    </DisjointUnion>
-    <ClassAssertion>
-        <Class IRI="#IndoorPlace"/>
-        <NamedIndividual IRI="#Bathroom"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#BathroomLight1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#IndoorPlace"/>
-        <NamedIndividual IRI="#Bedroom1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#Bedroom1Light1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#IndoorPlace"/>
-        <NamedIndividual IRI="#Bedroom2"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#Bedroom2Light1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#IndoorPlace"/>
-        <NamedIndividual IRI="#DiningRoom"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#DiningRoomLight1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#OutdoorPlace"/>
-        <NamedIndividual IRI="#Garage"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#GarageLight1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#OutdoorPlace"/>
-        <NamedIndividual IRI="#Garden"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#GardenLight1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#IndoorPlace"/>
-        <NamedIndividual IRI="#Kitchen"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#KitchenLight1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#IndoorPlace"/>
-        <NamedIndividual IRI="#LivingRoom"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#LivingRoomLight1"/>
-    </ClassAssertion>
-    <ClassAssertion>
-        <Class IRI="#SmartDevice"/>
-        <NamedIndividual IRI="#LivingRoomLight2"/>
-    </ClassAssertion>
-    <DifferentIndividuals>
-        <NamedIndividual IRI="#Bathroom"/>
-        <NamedIndividual IRI="#BathroomLight1"/>
-        <NamedIndividual IRI="#Bedroom1"/>
-        <NamedIndividual IRI="#Bedroom1Light1"/>
-        <NamedIndividual IRI="#Bedroom2"/>
-        <NamedIndividual IRI="#Bedroom2Light1"/>
-        <NamedIndividual IRI="#DiningRoom"/>
-        <NamedIndividual IRI="#DiningRoomLight1"/>
-        <NamedIndividual IRI="#Garage"/>
-        <NamedIndividual IRI="#GarageLight1"/>
-        <NamedIndividual IRI="#Garden"/>
-        <NamedIndividual IRI="#GardenLight1"/>
-        <NamedIndividual IRI="#Kitchen"/>
-        <NamedIndividual IRI="#KitchenLight1"/>
-        <NamedIndividual IRI="#LivingRoom"/>
-        <NamedIndividual IRI="#LivingRoomLight1"/>
-        <NamedIndividual IRI="#LivingRoomLight2"/>
-    </DifferentIndividuals>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#BathroomLight1"/>
-        <NamedIndividual IRI="#Bathroom"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#Bedroom1Light1"/>
-        <NamedIndividual IRI="#Bedroom1"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#Bedroom2Light1"/>
-        <NamedIndividual IRI="#Bedroom2"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#DiningRoomLight1"/>
-        <NamedIndividual IRI="#DiningRoom"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#GarageLight1"/>
-        <NamedIndividual IRI="#Garage"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#GardenLight1"/>
-        <NamedIndividual IRI="#Garden"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#KitchenLight1"/>
-        <NamedIndividual IRI="#Kitchen"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#LivingRoomLight1"/>
-        <NamedIndividual IRI="#LivingRoom"/>
-    </ObjectPropertyAssertion>
-    <ObjectPropertyAssertion>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-        <NamedIndividual IRI="#LivingRoomLight2"/>
-        <NamedIndividual IRI="#LivingRoom"/>
-    </ObjectPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isNamed"/>
-        <NamedIndividual IRI="#Bathroom"/>
-        <Literal>Bathroom</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#BathroomLight1"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isNamed"/>
-        <NamedIndividual IRI="#Bedroom1"/>
-        <Literal>Bedroom1</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#Bedroom1Light1"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isNamed"/>
-        <NamedIndividual IRI="#Bedroom2"/>
-        <Literal>Bedroom2</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#Bedroom2Light1"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isNamed"/>
-        <NamedIndividual IRI="#DiningRoom"/>
-        <Literal>DiningRoom</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#DiningRoomLight1"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isNamed"/>
-        <NamedIndividual IRI="#Garage"/>
-        <Literal>Garage</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#GarageLight1"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isNamed"/>
-        <NamedIndividual IRI="#Garden"/>
-        <Literal>Garden</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#GardenLight1"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isNamed"/>
-        <NamedIndividual IRI="#Kitchen"/>
-        <Literal>Kitchen</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#KitchenLight1"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isNamed"/>
-        <NamedIndividual IRI="#LivingRoom"/>
-        <Literal>LivingRoom</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#LivingRoomLight1"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <DataPropertyAssertion>
-        <DataProperty IRI="#isOn"/>
-        <NamedIndividual IRI="#LivingRoomLight2"/>
-        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">false</Literal>
-    </DataPropertyAssertion>
-    <InverseObjectProperties>
-        <ObjectProperty IRI="#hasSmartDevice"/>
-        <ObjectProperty IRI="#isSmartDeviceOf"/>
-    </InverseObjectProperties>
-    <ObjectPropertyDomain>
-        <ObjectProperty IRI="#hasSmartDevice"/>
-        <Class IRI="#Place"/>
-    </ObjectPropertyDomain>
-    <ObjectPropertyRange>
-        <ObjectProperty IRI="#hasSmartDevice"/>
-        <Class IRI="#SmartDevice"/>
-    </ObjectPropertyRange>
-    <FunctionalDataProperty>
-        <DataProperty IRI="#isNamed"/>
-    </FunctionalDataProperty>
-    <FunctionalDataProperty>
-        <DataProperty IRI="#isOn"/>
-    </FunctionalDataProperty>
-    <DataPropertyDomain>
-        <DataProperty IRI="#isNamed"/>
-        <Class IRI="#Place"/>
-    </DataPropertyDomain>
-    <DataPropertyDomain>
-        <DataProperty IRI="#isOn"/>
-        <Class IRI="#SmartDevice"/>
-    </DataPropertyDomain>
-</Ontology>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://www.semanticweb.org/rmyamguchi/ontologies/2019/7/smarthome.owl"
+         xmlns="http://www.semanticweb.org/rmyamguchi/ontologies/2019/7/smarthome.owl#">
+
+<owl:Ontology rdf:about="http://www.semanticweb.org/rmyamguchi/ontologies/2019/7/smarthome.owl">
+  <rdfs:comment>A smarthome ontology</rdfs:comment>
+</owl:Ontology>
+
+<owl:ObjectProperty rdf:about="#hasSmartDevice">
+  <rdfs:domain rdf:resource="#Place"/>
+  <rdfs:range rdf:resource="#SmartDevice"/>
+  <owl:inverseOf rdf:resource="#isSmartDeviceOf"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#isSmartDeviceOf"/>
+
+<owl:DatatypeProperty rdf:about="#isNamed">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Place"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#isOn">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#SmartDevice"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#Place">
+  <owl:disjointWith rdf:resource="#SmartDevice"/>
+</owl:Class>
+
+<owl:Class rdf:about="#SmartDevice"/>
+
+<owl:Class rdf:about="#IndoorPlace">
+  <rdfs:subClassOf rdf:resource="#Place"/>
+  <owl:disjointWith rdf:resource="#OutdoorPlace"/>
+</owl:Class>
+
+<owl:Class rdf:about="#OutdoorPlace">
+  <rdfs:subClassOf rdf:resource="#Place"/>
+</owl:Class>
+
+<IndoorPlace rdf:about="#Bathroom">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isNamed>Bathroom</isNamed>
+</IndoorPlace>
+
+<SmartDevice rdf:about="#BathroomLight1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#Bathroom"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isOn>
+</SmartDevice>
+
+<IndoorPlace rdf:about="#Bedroom1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isNamed>Bedroom1</isNamed>
+</IndoorPlace>
+
+<SmartDevice rdf:about="#Bedroom1Light1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#Bedroom1"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+</SmartDevice>
+
+<IndoorPlace rdf:about="#Bedroom2">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isNamed>Bedroom2</isNamed>
+</IndoorPlace>
+
+<SmartDevice rdf:about="#Bedroom2Light1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#Bedroom2"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+</SmartDevice>
+
+<IndoorPlace rdf:about="#DiningRoom">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isNamed>DiningRoom</isNamed>
+</IndoorPlace>
+
+<SmartDevice rdf:about="#DiningRoomLight1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#DiningRoom"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+</SmartDevice>
+
+<OutdoorPlace rdf:about="#Garage">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isNamed>Garage</isNamed>
+</OutdoorPlace>
+
+<SmartDevice rdf:about="#GarageLight1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#Garage"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+</SmartDevice>
+
+<OutdoorPlace rdf:about="#Garden">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isNamed>Garden</isNamed>
+</OutdoorPlace>
+
+<SmartDevice rdf:about="#GardenLight1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#Garden"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+</SmartDevice>
+
+<IndoorPlace rdf:about="#Kitchen">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isNamed>Kitchen</isNamed>
+</IndoorPlace>
+
+<SmartDevice rdf:about="#KitchenLight1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#Kitchen"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+</SmartDevice>
+
+<IndoorPlace rdf:about="#LivingRoom">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isNamed>LivingRoom</isNamed>
+</IndoorPlace>
+
+<SmartDevice rdf:about="#LivingRoomLight1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#LivingRoom"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+</SmartDevice>
+
+<SmartDevice rdf:about="#LivingRoomLight2">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <isSmartDeviceOf rdf:resource="#LivingRoom"/>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+</SmartDevice>
+
+<owl:AllDifferent>
+  <owl:distinctMembers rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Bathroom"/>
+    <rdf:Description rdf:about="#BathroomLight1"/>
+    <rdf:Description rdf:about="#Bedroom1"/>
+    <rdf:Description rdf:about="#Bedroom1Light1"/>
+    <rdf:Description rdf:about="#Bedroom2"/>
+    <rdf:Description rdf:about="#Bedroom2Light1"/>
+    <rdf:Description rdf:about="#DiningRoom"/>
+    <rdf:Description rdf:about="#DiningRoomLight1"/>
+    <rdf:Description rdf:about="#Garage"/>
+    <rdf:Description rdf:about="#GarageLight1"/>
+    <rdf:Description rdf:about="#Garden"/>
+    <rdf:Description rdf:about="#GardenLight1"/>
+    <rdf:Description rdf:about="#Kitchen"/>
+    <rdf:Description rdf:about="#KitchenLight1"/>
+    <rdf:Description rdf:about="#LivingRoom"/>
+    <rdf:Description rdf:about="#LivingRoomLight1"/>
+    <rdf:Description rdf:about="#LivingRoomLight2"/>
+  </owl:distinctMembers>
+</owl:AllDifferent>
 
 
-
-<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
-
+</rdf:RDF>
