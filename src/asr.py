@@ -3,18 +3,25 @@ from porcupine.binding.python.porcupine import Porcupine
 import pyaudio
 import struct
 from playsound import playsound
+import platform
 
 """
 Módulo Automatic Speech Recognition usando API da Google
 """
 class ASR:
     def __init__(self):
-        self._library_path = 'pytcc/porcupine/lib/mac/x86_64/libpv_porcupine.dylib'
+        os = platform.system()
+        if (os == 'Darwin'):
+            self._library_path = 'pytcc/porcupine/lib/mac/x86_64/libpv_porcupine.dylib'
+            self._keyword_file_path = 'pytcc/keyword/minerva_mac.ppn'
+        elif (os == 'Windows'):
+            self._library_path = 'pytcc/porcupine/lib/windows/amd64/libpv_porcupine.dll'
+            self._keyword_file_path = 'pytcc/keyword/minerva_windows.ppn'
+        elif (os == 'Linux'):
+            self._library_path = 'pytcc/porcupine/lib/linux/x86_64/libv_porcupine.so'
+            self._keyword_file_path = 'pytcc/keyword/minerva_linux.ppn'
         self._model_file_path = 'pytcc/porcupine/lib/common/porcupine_params.pv'
-        # Para gerar keyword: pv_porcupine_optimizer -r resource_directory -w keyword -p platform -o output_directory
-        # Ex: tools/optimizer/mac/x86_64/pv_porcupine_optimizer -r resources/optimizer_data -w "minerva" -p mac -o ~/PythonProjects/pytcc/keyword
-        self._keyword_file_path = 'pytcc/keyword/minerva_mac.ppn'
-        self._sensitivity = 0.5
+        self._sensitivity = 0.7
         self._input_device_index = None
 
 # Ouve uma frase, retorna o texto
@@ -36,7 +43,7 @@ class ASR:
                 return phrase
 
 # Espera keyword
-    def wait_keyword(self):
+    def waitKeyword(self):
         porcupine = None
         pa = None
         audio_stream = None

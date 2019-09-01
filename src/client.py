@@ -30,7 +30,7 @@ class Client:
         while True:
 
             try:
-                self.asr.wait_keyword()
+                self.asr.waitKeyword()
                 text_to_be_analyzed = self.asr.listen()
 
                 if not text_to_be_analyzed:
