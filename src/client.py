@@ -19,7 +19,7 @@ class Client:
         # TODO: isso deve ir pra config, preferencialmente num JSON
         self.DIALOGFLOW_PROJECT_ID = 'smart-home-1-6c30f'
         self.DIALOGFLOW_LANGUAGE_CODE = 'pt-BR'
-        self.GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file('pytcc/credentials/smart-home-1-6c30f-b1024858ceb7.json')
+        self.GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file('pytcc/credentials/smart-home-1-6c30f-e78ffd0ca7a1.json')
         self.SESSION_ID = 'tcc-chatbot'
 
     def run(self):
