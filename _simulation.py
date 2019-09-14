@@ -1,13 +1,13 @@
 import os
 import pygame
 import pygame.gfxdraw
-from src.sm import SemanticMemory
+from src.dm import DialogManager
 
 class Simulation:
 
     def __init__(self):
         # Carregando a memoria
-        self.smarthome = SemanticMemory()
+        self.smarthome = DialogManager()
         self.in_places = self.smarthome.getIndoorPlaces()
         self.out_places = self.smarthome.getOutdoorPlaces()
         self.n_in_places = len(self.in_places)
@@ -33,7 +33,7 @@ class Simulation:
     Recarrega a memoria
     """
     def refresh(self):
-        self.smarthome = SemanticMemory()
+        self.smarthome = DialogManager()
         self.in_places = self.smarthome.getIndoorPlaces()
         self.out_places = self.smarthome.getOutdoorPlaces()
 
@@ -43,14 +43,14 @@ class Simulation:
     """
     def drawPlace(self, surface, place):
         # Desenhando o rótulo
-        text_s = self.font.render(self.smarthome.getName(place), True, (0,0,0))
+        text_s = self.font.render(self.smarthome.getPlaceNames(place)[0], True, (0,0,0))
         surface.blit(text_s, (self.space, self.space))
         # Desenhando o local
         pygame.gfxdraw.rectangle(surface, 
                                 (0, 0, self.unit_width, self.unit_height),
                                 (0, 0, 0))
         # Dividindo o lugar para colocar os dispositivos
-        devices = self.smarthome.getSmartDevices(place)
+        devices = self.smarthome.getPlaceSmartDevices(place)
         n_devs = len(devices)
         n_cols = int(n_devs ** 0.5 + 0.5)
         n_rows = n_devs // n_cols + (n_devs % n_cols > 0)
