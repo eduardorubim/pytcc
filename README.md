@@ -25,8 +25,18 @@ Deve-se gerar as credenciais do agente Dialogflow periodicamente e colocá-las e
 
 ## Simulador
 
-O simulador se encontra em `simulation.py`. É possível observar mudanças na ontologia em tempo real. Execute-o com Python:
+O simulador se encontra em `_simulation.py`. É possível observar mudanças na ontologia em tempo real. Execute-o com Python:
 
 ```sh
-$ python pytcc/simulation.py
+$ python pytcc/_simulation.py
 ```
+
+## Exportando entidades para o Dialogflow
+
+É possível criar um `.csv` para realizar o Upload de entidades no Dialogflow. Rode o `_export.py` após criar os indivíduos em `pytcc/smarthome/smarthome.owl`:
+
+```sh
+$ python pytcc/_export.py
+```
+
+Em seguida, vá até a aba Entities do seu Dialogflow Agent, clique na opção Upload Entity oculta ao lado de Create Entity e selecione o arquivo `.csv` gerado em `pytcc/smarthome/`.
