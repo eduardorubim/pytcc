@@ -1,5 +1,8 @@
 from owlready2 import *
 
+"""
+Classe do gerenciador de diálogo
+"""
 class DialogManager:
 
     # Carrega as informacoes da memoria semantica (+ episodica)
@@ -41,6 +44,7 @@ class DialogManager:
 
     """
     Retorna uma lista com o nomes (Names)
+    * Names é uma classe contendo nomes (String)
     """
     def getNames(self):
         # [0] corresponde a smarthome.Names
@@ -109,13 +113,13 @@ class DialogManager:
                     return device
         return None
 
-    #################### FUNCOES PARA LIGAR DISPOSITIVOS ####################
+    #################### FUNCOES PARA LIGAR DISPOSITIVOS (DUMMY) ####################
     
     """
     Liga um dispositivo (SmartDevice)
     """
     def turnOn(self, smart_device):
-        # Funcao que ligaria o dispostivo fisico
+        # Funcao que ligaria o dispositivo fisico
         smart_device.isOn = True
         self.onto.save()
 
@@ -132,7 +136,7 @@ class DialogManager:
                 return
         print ("Local ou dispositivo nao encontrados")
         
-    #################### FUNCOES PARA DESLIGAR DISPOSITIVOS ####################
+    #################### FUNCOES PARA DESLIGAR DISPOSITIVOS (DUMMY) ####################
 
     """
     Desliga um dispositivo (SmartDevice)
@@ -154,6 +158,54 @@ class DialogManager:
                 self.turnOff(smart_device)
                 return
         print ("Local ou dispositivo nao encontrados")
+
+
+    #################### FUNCAO PARA TRATAR O RESULTADO ####################
+
+    """
+    Decide a acao baseado no retorno do Dialogflow
+    * `ret` é a variável de retorno, e depende muito de como a API de acionamentos seria configurada
+    * a implementação a seguir é um dummy: ret = [intent, parameters, response message]
+    """
+    def treatResult (self, result):
+
+        intent_name = result.query_result.intent.display_name
+        ret = [intent_name]
+
+        print("[DialogManager]Query text:", result.query_result.query_text)
+        print("[DialogManager]Detected intent:", intent_name)
+        print("[DialogManager]Detected intent confidence:", result.query_result.intent_detection_confidence)
+        print("[DialogManager]Detected parameters:")
+
+        # Ligar o 'device' em 'place'
+        if intent_name == "smarthome.device.switch.on":
+            device_name = result.query_result.parameters.fields['device'].string_value
+            place_name = result.query_result.parameters.fields['place'].string_value 
+            print("               device:", device_name)
+            print("               place :", place_name)
+            ret.append([device_name, place_name])
+            self.turnOnFromSmartDeviceNamePlaceName(device_name, place_name)
+
+        # Desligar o 'device' em 'place'
+        elif intent_name == "smarthome.device.switch.off":
+            device_name = result.query_result.parameters.fields['device'].string_value
+            place_name = result.query_result.parameters.fields['place'].string_value
+            print("               device:", device_name)
+            print("               place :", place_name)
+            ret.append([device_name, place_name])
+            self.turnOffFromSmartDeviceNamePlaceName(device_name, place_name)
+
+        # Default
+        else:
+            print(result.query_result.parameters)
+            ret.append([])
+
+        fulf_text = result.query_result.fulfillment_text
+        print("[DialogManager]Fulfillment text:", fulf_text)
+        ret.append(fulf_text)
+
+        return ret
+
 
 if __name__ == "__main__":
     sm = DialogManager()

@@ -32,9 +32,9 @@ class ASR:
         mp = sr.Recognizer()
         phrase = ''
         with sr.Microphone() as source:
-            mp.adjust_for_ambient_noise(source)
+            #mp.adjust_for_ambient_noise(source)
+            #playsound("pytcc/audio/double-beep.mp3")
             print("[ASR]Ouvindo")
-            playsound("pytcc/audio/double-beep.mp3")   
             try:
                 audio = mp.listen(source)
                 try:
