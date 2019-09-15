@@ -25,7 +25,7 @@ Deve-se gerar as credenciais do agente Dialogflow periodicamente e colocá-las e
 
 ## Simulador
 
-O simulador se encontra em `_simulation.py`. É possível observar mudanças na ontologia em tempo real. Execute-o com Python:
+O simulador se encontra em `_simulation.py`. É possível observar mudanças no esquema simplificado da residência em tempo real. Execute-o com Python:
 
 ```sh
 $ python pytcc/_simulation.py
