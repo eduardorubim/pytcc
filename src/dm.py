@@ -119,7 +119,6 @@ class DialogManager:
     Liga um dispositivo (SmartDevice)
     """
     def turnOn(self, smart_device):
-        # Funcao que ligaria o dispositivo fisico
         smart_device.isOn = True
         self.onto.save()
 
@@ -142,7 +141,6 @@ class DialogManager:
     Desliga um dispositivo (SmartDevice)
     """
     def turnOff(self, smart_device):
-        # Função que desligaria o dispostivo físico
         smart_device.isOn = False
         self.onto.save()
 
@@ -164,8 +162,7 @@ class DialogManager:
 
     """
     Decide a acao baseado no retorno do Dialogflow
-    * `ret` é a variável de retorno, e depende muito de como a API de acionamentos seria configurada
-    * a implementação a seguir é um dummy: ret = [intent, parameters, response message]
+    ret = [intent, parameters, response message, end conversation]
     """
     def treatResult (self, result):
 
@@ -177,34 +174,103 @@ class DialogManager:
         print("[DialogManager]Detected intent confidence:", result.query_result.intent_detection_confidence)
         print("[DialogManager]Detected parameters:")
 
-        # Ligar o 'device' em 'place'
-        if intent_name == "smarthome.device.switch.on":
+        # Ativar/desativar um 'device' em um 'place'
+        if intent_name.startswith("smarthome.device."):
             device_name = result.query_result.parameters.fields['device'].string_value
             place_name = result.query_result.parameters.fields['place'].string_value 
             print("               device:", device_name)
             print("               place :", place_name)
             ret.append([device_name, place_name])
-            self.turnOnFromSmartDeviceNamePlaceName(device_name, place_name)
 
-        # Desligar o 'device' em 'place'
-        elif intent_name == "smarthome.device.switch.off":
-            device_name = result.query_result.parameters.fields['device'].string_value
-            place_name = result.query_result.parameters.fields['place'].string_value
-            print("               device:", device_name)
-            print("               place :", place_name)
-            ret.append([device_name, place_name])
-            self.turnOffFromSmartDeviceNamePlaceName(device_name, place_name)
+        # Criar uma rotina
+        elif intent_name.startswith("smarthome.routine."):
+            ret.append([])
+            # .create:
+                # nada
+            # .create-command.on:
+                # device_name = String
+                # place_names = [String]
+                # ...armazenar... <<---------------------------------------------- json?
+            # .create-command.off:
+                # Análogo a .create-command.on
+            # .create-finish:
+                # nada
+            # .create-finish.command:
+                # command = result.query_result.parameters.fields['phrase'].string_value
+                # createIntent(project_id
+                #   diplay_name = "alguma coisa padronizada especial"
+                #   training_phrases_parts = [command]
+                #   message_texts = "")
+            
+            # .delete:
+                # deleteIntent(project_id, intent_id = display_name)
+        
+        # Rotinas criadas
+        # elif intent_name.startswith("a coisa padronizada especial"):
+            # ret.append([])
+            # for id in lista_de_rotinas:
+                # if id == "resto da coisa padronizada especial":
+                    # ret[1] = [id.device_name, """ id.place_names """  ]
+                    # break
+                
 
-        # Default
+        # Nada
         else:
             print(result.query_result.parameters)
             ret.append([])
 
+        # Texto para resposta falada
         fulf_text = result.query_result.fulfillment_text
         print("[DialogManager]Fulfillment text:", fulf_text)
         ret.append(fulf_text)
 
+        # Finalizar conversa?
+        ret.append(result.query_result.diagnostic_info.fields['end_conversation'].bool_value)
+
+        #print(result)
+
         return ret
+
+    #################### FUNCOES PARA API DO DIALOGFLOW ####################
+
+    """
+    Cria uma intent
+    """
+    def createIntent(project_id, display_name, training_phrases_parts, message_texts):
+        import dialogflow_v2 as dialogflow
+        intents_client = dialogflow.IntentsClient()
+
+        parent = intents_client.project_agent_path(project_id)
+        training_phrases = []
+        for training_phrases_part in training_phrases_parts:
+            part = dialogflow.types.Intent.TrainingPhrase.Part(text=training_phrases_part)
+            # Here we create a new training phrase for each provided part.
+            training_phrase = dialogflow.types.Intent.TrainingPhrase(parts=[part])
+            training_phrases.append(training_phrase)
+
+        text = dialogflow.types.Intent.Message.Text(text=message_texts)
+        message = dialogflow.types.Intent.Message(text=text)
+
+        intent = dialogflow.types.Intent(
+            display_name=display_name,
+            training_phrases=training_phrases,
+            messages=[message])
+
+        response = intents_client.create_intent(parent, intent)
+
+        print('Intent created: {}'.format(response))
+
+    """
+    Deleta uma intent
+    """
+    def delete_intent(project_id, intent_id):
+        import dialogflow_v2 as dialogflow
+        intents_client = dialogflow.IntentsClient()
+
+        intent_path = intents_client.intent_path(project_id, intent_id)
+
+        intents_client.delete_intent(intent_path)
+
 
 
 if __name__ == "__main__":

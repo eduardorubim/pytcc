@@ -28,10 +28,13 @@ class Client:
         session_client = dialogflow.SessionsClient(credentials=self.GOOGLE_APPLICATION_CREDENTIALS)
         session = session_client.session_path(self.DIALOGFLOW_PROJECT_ID, self.SESSION_ID)
 
+        wait_keyword = True
+
         while True:
 
             try:
-                self.asr.waitKeyword()
+                if wait_keyword:
+                    self.asr.waitKeyword()
                 text_to_be_analyzed = self.asr.listen()
 
                 if not text_to_be_analyzed:
@@ -47,14 +50,17 @@ class Client:
                     
                     response = self.dm.treatResult(result)
 
-                    # Aqui ocorreria o acionamento utilizando:
-                    # response[0]   : intent
-                    # response[1][ ]: paramenters
+                    # Acionamento
+                    if response[0].endswith("device.on"):
+                        self.dm.turnOnFromSmartDeviceNamePlaceName(response[1][0], response[1][1])
+                    elif response[0].endswith("device.off"):
+                        self.dm.turnOffFromSmartDeviceNamePlaceName(response[1][0], response[1][1])
 
+                    # Resposta
                     if response[2]:
                         self.tts.speak(response[2])
-                    else:
-                        print("[Client]Não há uma resposta")
+                    
+                    wait_keyword = response[3]
 
             except KeyboardInterrupt:
                 print ("\n[Client]Parando cliente")
