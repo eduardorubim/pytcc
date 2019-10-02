@@ -5,3 +5,4 @@ say.mp3
 pytcc.code-workspace
 credentials
 __pycache__
+_tests.py

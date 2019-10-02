@@ -2,11 +2,11 @@ import os
 import json
 import dialogflow_v2 as dialogflow
 from google.api_core.exceptions import InvalidArgument
-from google.oauth2 import service_account
 
 from src.tts import TTS
 from src.asr import ASR
 from src.dm  import DialogManager as DM
+from src.globals import *
 
 """
 Módulo Cliente Minerva
@@ -18,15 +18,12 @@ class Client:
         self.dm = DM()
 
         # TODO: isso deve ir pra config, preferencialmente num JSON
-        self.DIALOGFLOW_PROJECT_ID = 'smart-home-1-6c30f'
-        self.DIALOGFLOW_LANGUAGE_CODE = 'pt-BR'
-        self.GOOGLE_APPLICATION_CREDENTIALS = service_account.Credentials.from_service_account_file('pytcc/credentials/smart-home-1-6c30f-e78ffd0ca7a1.json')
         self.SESSION_ID = 'tcc-chatbot'
 
     def run(self):
 
-        session_client = dialogflow.SessionsClient(credentials=self.GOOGLE_APPLICATION_CREDENTIALS)
-        session = session_client.session_path(self.DIALOGFLOW_PROJECT_ID, self.SESSION_ID)
+        session_client = dialogflow.SessionsClient(credentials=GOOGLE_APPLICATION_CREDENTIALS)
+        session = session_client.session_path(DIALOGFLOW_PROJECT_ID, self.SESSION_ID)
 
         wait_keyword = True
 
@@ -41,7 +38,9 @@ class Client:
                     print("[Client]Nada reconhecido")
                     continue
                 else:
-                    text_input = dialogflow.types.TextInput(text=text_to_be_analyzed, language_code=self.DIALOGFLOW_LANGUAGE_CODE)
+                    text_input = dialogflow.types.TextInput(
+                        text=text_to_be_analyzed, 
+                        language_code=DIALOGFLOW_LANGUAGE_CODE)
                     query_input = dialogflow.types.QueryInput(text=text_input)  
                     try:
                         result = session_client.detect_intent(session=session, query_input=query_input)
@@ -51,16 +50,14 @@ class Client:
                     response = self.dm.treatResult(result)
 
                     # Acionamento
-                    if response[0].endswith("device.on"):
-                        self.dm.turnOnFromSmartDeviceNamePlaceName(response[1][0], response[1][1])
-                    elif response[0].endswith("device.off"):
-                        self.dm.turnOffFromSmartDeviceNamePlaceName(response[1][0], response[1][1])
+                    for i, action in enumerate(response['actions']):
+                        self.dm.do (action, response['parameters'][i])
 
                     # Resposta
-                    if response[2]:
-                        self.tts.speak(response[2])
+                    if response['answer']:
+                        self.tts.speak(response['answer'])
                     
-                    wait_keyword = response[3]
+                    wait_keyword = response['end_conversation']
 
             except KeyboardInterrupt:
                 print ("\n[Client]Parando cliente")

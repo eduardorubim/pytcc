@@ -109,7 +109,7 @@ class Simulation:
     """
     def run(self):
 
-        last_mod_date = os.stat("pytcc/smarthome/smarthome.owl")[8]
+        last_mod_date = os.stat("pytcc/configs/smarthome.owl")[8]
         self.drawSmartHome()
         pygame.display.flip()
         try:
@@ -120,7 +120,7 @@ class Simulation:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE or event.unicode == 'q':
                         break
-                new_date = os.stat("pytcc/smarthome/smarthome.owl")[8]
+                new_date = os.stat("pytcc/configs/smarthome.owl")[8]
                 if new_date > last_mod_date:
                     print("Refresh!")
                     last_mod_date = new_date

@@ -8,7 +8,7 @@ class ExportCSV:
         self.data = DialogManager()
 
     def generatePlaceCSV(self):
-        with open ('pytcc/smarthome/place.csv', mode='w') as memory:
+        with open ('pytcc/configs/place.csv', mode='w') as memory:
             csv_writer = csv.writer(memory, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL)
             for place in self.data.getPlaces():
                 names = self.data.getPlaceNames(place)
