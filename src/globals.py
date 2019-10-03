@@ -10,7 +10,7 @@ ROUTINES_JSON_PATH = "pytcc/configs/routines.json"
 os = platform.system()
 try:
     if (os == 'Darwin' or os == 'Linux'):
-            subprocess.call(['./pytcc/configs/bash.sh'])
+        subprocess.call(['./pytcc/configs/bash.sh'])
     elif (os == 'Windows'):
         subprocess.Popen(['pytcc/configs/cmd.cmd'])
 except Exception as e:
