@@ -220,15 +220,16 @@ class DialogManager:
         # Ativar/desativar um 'device' em um 'place'
         if main_action.startswith("device."):
             ret['actions'].append(main_action)
-            ret['parameters'][0]['devices'].append(result.query_result.parameters.fields['device'].list_value)
-            ret['parameters'][0]['places'].append(result.query_result.parameters.fields['place'].list_value)
-            print("                device:", len(ret['parameters'][0]['devices'][0]))
-            print("                place :", len(ret['parameters'][0]['places'][0]))
+            ret['parameters'][0]['devices'].append(self._list2array(result.query_result.parameters.fields['device'].list_value))
+            ret['parameters'][0]['places'].append(self._list2array(result.query_result.parameters.fields['place'].list_value))
+            print("                device:", ret['parameters'][0]['devices'][0])
+            print("                place :", ret['parameters'][0]['places'][0])
 
         # Criar uma rotina
         elif main_action.startswith("routine."):
 
             if main_action.endswith(".create"):
+                print ("[DialogManager] Criando rotina id:", self.id)
                 with open (ROUTINES_JSON_PATH, 'w') as jfile:
                     try:
                         self.data['routines'][self.id]['actions'] = []
@@ -245,15 +246,15 @@ class DialogManager:
             elif main_action.endswith("on.command"):
                 with open (ROUTINES_JSON_PATH, 'w') as jfile:
                     self.data['routines'][self.id]['actions'].append("devices.on")
-                    self.data['routines'][self.id]['devices'].append(result.query_result.parameters.fields['device'].list_value)
-                    self.data['routines'][self.id]['places'].append(result.query_result.parameters.fields['place'].list_value)
+                    self.data['routines'][self.id]['devices'].append(self._list2array(result.query_result.parameters.fields['device'].list_value))
+                    self.data['routines'][self.id]['places'].append(self._list2array(result.query_result.parameters.fields['place'].list_value))
                     json.dump(self.data, jfile)
 
             elif main_action.endswith("off.command"):
                 with open (ROUTINES_JSON_PATH, 'w') as jfile:
                     self.data['routines'][self.id]['actions'].append("devices.off")
-                    self.data['routines'][self.id]['devices'].append(result.query_result.parameters.fields['device'].list_value)
-                    self.data['routines'][self.id]['places'].append(result.query_result.parameters.fields['place'].list_value)
+                    self.data['routines'][self.id]['devices'].append(self._list2array(result.query_result.parameters.fields['device'].list_value))
+                    self.data['routines'][self.id]['places'].append(self._list2array(result.query_result.parameters.fields['place'].list_value))
                     json.dump(self.data, jfile)
 
             elif main_action.endswith("finish"):
@@ -261,17 +262,22 @@ class DialogManager:
 
             elif main_action.endswith("finish.command"):
                 command = result.query_result.parameters.fields['phrase'].string_value
-                diplay_name = "user.command." + str(self.id)
+                display_name = "smarthome.user.command." + str(self.id)
                 training_phrases_parts = [command]
                 action = display_name + ":" + command.replace(' ', '-')
+                print("[DialogManager] Tentando criar finalizar criação da rotina:")
+                print("                Nome da rotina:", display_name)
+                print("                Frase de ativação:", command)
+                print("                Código da ação:", action)
                 try:
-                    self.createIntent(DIALOGFLOW_PROJECT_ID, diplay_name, training_phrases_parts, action)
+                    self.createIntent(DIALOGFLOW_PROJECT_ID, display_name, training_phrases_parts, action)
                     self.id += 1
                     with open (ROUTINES_JSON_PATH, 'w') as jfile:
                         self.data['size'] += 1
                         json.dump(self.data, jfile)
-                except:
-                    pass
+                except Exception as e:
+                    print("[DialogManager] Não foi possível criar a rotina:")
+                    print("               ", e)
             
             elif main_action.endswith(".delete"):
                 pass
@@ -284,8 +290,9 @@ class DialogManager:
                     with open (ROUTINES_JSON_PATH, 'w') as jfile:
                         self.data['size'] = self.data['size'] - 1 if self.id > 0 else 1
                         json.dump(self.data, jfile)
-                except:
-                    pass
+                except Exception as e:
+                    print("[DialogManager] Não foi possível deletar a rotina:")
+                    print("               ", e)
         
         # Rotinas criadas
         # elif ret['action'].startswith("user.command."):
@@ -307,18 +314,26 @@ class DialogManager:
         # Finalizar conversa?
         ret['end_conversation'] = result.query_result.diagnostic_info.fields['end_conversation'].bool_value
 
-        #print(result)
-
         return ret
+
+    """
+    Transforma list_value em um vetor Python
+    """
+    def _list2array(self, list_value):
+        array = []
+        for value in list_value:
+            array.append(value)
+        return array
 
     #################### FUNCOES PARA API DO DIALOGFLOW ####################
 
     """
-    Cria uma intent (adaptado de https://cloud.google.com/dialogflow/docs/manage-intents?hl=th)
+    Cria uma intent (adaptado de https://cloud.google.com/dialogflow/docs/manage-intents)
     """
     def createIntent(self, project_id, display_name, training_phrases_parts, action):
         intents_client = dialogflow.IntentsClient()
 
+        message_texts = ["Rotina executada"]
         parent = intents_client.project_agent_path(project_id)
         training_phrases = []
         for training_phrases_part in training_phrases_parts:
@@ -334,14 +349,14 @@ class DialogManager:
             display_name=display_name,
             training_phrases=training_phrases,
             action=action,
-            messages=[])
+            messages=[message])
 
-        response = intents_client.create_intent(parent, intent)
+        response = intents_client.create_intent(parent, intent, language_code='pt-BR')
 
         print('Intent created: {}'.format(response))
 
     """
-    Deleta uma intent (adaptado de https://cloud.google.com/dialogflow/docs/manage-intents?hl=th)
+    Deleta uma intent (adaptado de https://cloud.google.com/dialogflow/docs/manage-intents)
     """
     def delete_intent(self, project_id, intent_id):
         intents_client = dialogflow.IntentsClient()
@@ -360,7 +375,7 @@ class DialogManager:
         intents = intents_client.list_intents(parent)
         
         for intent in intents:
-            if intent.action.__contains__(command.replace(' ', '-')):
+            if intent.action.endswith(":" + command.replace(' ', '-')):
                 self.delete_intent(DIALOGFLOW_PROJECT_ID, intent.name)
                 return
 
@@ -368,7 +383,7 @@ class DialogManager:
 
 
     """
-    Lista as intents (para DEBUG)
+    Lista as intents (para DEBUG) (adaptado de https://cloud.google.com/dialogflow/docs/manage-intents)
     """
     def list_intents(self, project_id):
         intents_client = dialogflow.IntentsClient()
