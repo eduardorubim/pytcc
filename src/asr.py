@@ -30,7 +30,7 @@ class ASR:
 # Ouve uma frase, retorna o texto
     def listen(self):
         mp = sr.Recognizer()
-        phrase = ''
+        phrase = None
         with sr.Microphone() as source:
             #mp.adjust_for_ambient_noise(source)
             #playsound("pytcc/audio/double-beep.mp3")
@@ -40,7 +40,6 @@ class ASR:
                 try:
                     phrase = mp.recognize_google(audio, language='pt-BR')
                 except sr.UnknownValueError:
-                    phrase = "Não entendi"
                     print ("[ASR]Não Entendi")
             finally:
                 return phrase
