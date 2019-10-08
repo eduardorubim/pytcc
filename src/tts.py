@@ -11,5 +11,5 @@ class TTS:
 
     def speak(self, text_to_speak):
         tts = gTTS(text=text_to_speak, lang='pt-br')
-        tts.save("pytcc/audio/say.mp3")
-        playsound("pytcc/audio/say.mp3")
+        tts.save("audio/say.mp3")
+        playsound("audio/say.mp3")

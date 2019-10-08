@@ -12,18 +12,18 @@ class ASR:
     def __init__(self):
         os = platform.system()
         if (os == 'Darwin'):
-            self._library_path = 'pytcc/porcupine/lib/mac/x86_64/libpv_porcupine.dylib'
-            #self._keyword_file_path = 'pytcc/keyword/minerva_mac.ppn'
-            self._keyword_file_path = 'pytcc/porcupine/resources/keyword_files/mac/alexa_mac.ppn'
+            self._library_path = 'porcupine/lib/mac/x86_64/libpv_porcupine.dylib'
+            #self._keyword_file_path = 'keyword/minerva_mac.ppn'
+            self._keyword_file_path = 'porcupine/resources/keyword_files/mac/alexa_mac.ppn'
         elif (os == 'Windows'):
-            self._library_path = 'pytcc/porcupine/lib/windows/amd64/libpv_porcupine.dll'
-            #self._keyword_file_path = 'pytcc/keyword/minerva_windows.ppn'
-            self._keyword_file_path = 'pytcc/porcupine/resources/keyword_files/windows/alexa_windows.ppn'
+            self._library_path = 'porcupine/lib/windows/amd64/libpv_porcupine.dll'
+            #self._keyword_file_path = 'keyword/minerva_windows.ppn'
+            self._keyword_file_path = 'porcupine/resources/keyword_files/windows/alexa_windows.ppn'
         elif (os == 'Linux'):
-            self._library_path = 'pytcc/porcupine/lib/linux/x86_64/libv_porcupine.so'
-            #self._keyword_file_path = 'pytcc/keyword/minerva_linux.ppn'
-            self._keyword_file_path = 'pytcc/porcupine/resources/keyword_files/linux/alexa_linux.ppn'
-        self._model_file_path = 'pytcc/porcupine/lib/common/porcupine_params.pv'
+            self._library_path = 'porcupine/lib/linux/x86_64/libv_porcupine.so'
+            #self._keyword_file_path = 'keyword/minerva_linux.ppn'
+            self._keyword_file_path = 'porcupine/resources/keyword_files/linux/alexa_linux.ppn'
+        self._model_file_path = 'porcupine/lib/common/porcupine_params.pv'
         self._sensitivity = 0.7
         self._input_device_index = None
 

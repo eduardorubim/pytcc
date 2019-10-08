@@ -12,7 +12,7 @@ $ pip install -r requirements.txt
 Ainda no ambiente virtual, execute `pytcc` com Python:
 
 ```sh
-$ python pytcc
+$ python .
 ```
 
 ## Módulo TTS em MAC OS X
@@ -28,7 +28,7 @@ Deve-se gerar as credenciais do agente Dialogflow periodicamente e colocá-las e
 O simulador se encontra em `_simulation.py`. É possível observar mudanças no esquema simplificado da residência em tempo real. Execute-o com Python:
 
 ```sh
-$ python pytcc/_simulation.py
+$ python _simulation.py
 ```
 
 ## Exportando entidades para o Dialogflow
@@ -36,7 +36,7 @@ $ python pytcc/_simulation.py
 É possível criar um `.csv` para realizar o Upload de entidades no Dialogflow. Rode o `_export.py` após criar os indivíduos em `pytcc/smarthome/smarthome.owl`:
 
 ```sh
-$ python pytcc/_export.py
+$ python _export.py
 ```
 
 Em seguida, vá até a aba Entities do seu Dialogflow Agent, clique na opção Upload Entity oculta ao lado de Create Entity e selecione o arquivo `.csv` gerado em `pytcc/smarthome/`.
