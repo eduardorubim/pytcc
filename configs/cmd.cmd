@@ -1,2 +1,0 @@
-
-set GOOGLE_APPLICATION_CREDENTIALS=pytcc/credentials/smart-home.json
