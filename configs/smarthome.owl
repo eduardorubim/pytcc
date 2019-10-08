@@ -252,14 +252,6 @@
   <hasNameValue>lâmpada</hasNameValue>
 </Names>
 
-<owl:AllDisjointClasses>
-  <owl:members rdf:parseType="Collection">
-    <rdf:Description rdf:about="#Names"/>
-    <rdf:Description rdf:about="#Place"/>
-    <rdf:Description rdf:about="#SmartDevice"/>
-  </owl:members>
-</owl:AllDisjointClasses>
-
 <owl:AllDifferent>
   <owl:distinctMembers rdf:parseType="Collection">
     <rdf:Description rdf:about="#Bathroom"/>
@@ -291,6 +283,14 @@
     <rdf:Description rdf:about="#MainLightNames"/>
   </owl:distinctMembers>
 </owl:AllDifferent>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Names"/>
+    <rdf:Description rdf:about="#Place"/>
+    <rdf:Description rdf:about="#SmartDevice"/>
+  </owl:members>
+</owl:AllDisjointClasses>
 
 
 </rdf:RDF>

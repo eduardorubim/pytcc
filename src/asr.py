@@ -34,13 +34,13 @@ class ASR:
         with sr.Microphone() as source:
             #mp.adjust_for_ambient_noise(source)
             #playsound("pytcc/audio/double-beep.mp3")
-            print("[ASR]Ouvindo")
+            print("[ASR] Ouvindo")
             try:
                 audio = mp.listen(source)
                 try:
                     phrase = mp.recognize_google(audio, language='pt-BR')
                 except sr.UnknownValueError:
-                    print ("[ASR]Não Entendi")
+                    print ("[ASR] Não Entendi")
             finally:
                 return phrase
 
@@ -64,13 +64,13 @@ class ASR:
                 frames_per_buffer=porcupine.frame_length,
                 input_device_index=self._input_device_index)
 
-            print("[ASR]Esperando keyword")
+            print("[ASR] Esperando keyword")
             while True:
                 pcm = audio_stream.read(porcupine.frame_length)
                 pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
                 result = porcupine.process(pcm)
                 if result:
-                    print("[ASR]Keyword detectada")
+                    print("[ASR] Keyword detectada")
                     break
         finally:
             #print ("\n[ASR]Limpando...")

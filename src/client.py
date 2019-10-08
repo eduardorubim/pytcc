@@ -31,7 +31,7 @@ class Client:
 
             try:
                 if SILENT_MODE:
-                    text_to_be_analyzed = input("[Client] SILENT MODE: ")
+                    text_to_be_analyzed = input("[Client] <-- ")
                 else:
                     if wait_keyword:
                         self.asr.waitKeyword()
