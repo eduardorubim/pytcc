@@ -292,12 +292,13 @@ class DialogManager:
 
             elif main_action.endswith(".delete.command"):
                 command = result.query_result.parameters.fields['phrase'].string_value
-                try: # AINDA NÃO ESTÁ COMPLETO
+                try:
                     self.deleteCommand(command)
-                    self.id -= 1
-                    with open (ROUTINES_JSON_PATH, 'w') as jfile:
-                        self.data['size'] = self.data['size'] - 1 if self.id > 0 else 1
-                        json.dump(self.data, jfile)
+                    # Mantém o `routines.json` intacto, deleta apenas no Dialogflow
+                    #self.id -= 1
+                    #with open (ROUTINES_JSON_PATH, 'w') as jfile:
+                    #    self.data['size'] = self.data['size'] - 1 if self.id > 0 else 1
+                    #    json.dump(self.data, jfile)
                 except Exception as e:
                     ret['answer'] = "Não foi possível deletar essa rotina"
                     print("[DialogManager] Não foi possível deletar a rotina:")

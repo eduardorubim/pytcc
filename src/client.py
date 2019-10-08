@@ -44,23 +44,25 @@ class Client:
                     text_input = dialogflow.types.TextInput(
                         text=text_to_be_analyzed, 
                         language_code=DIALOGFLOW_LANGUAGE_CODE)
-                    query_input = dialogflow.types.QueryInput(text=text_input)  
+                    query_input = dialogflow.types.QueryInput(text=text_input)
+
                     try:
                         result = session_client.detect_intent(session=session, query_input=query_input)
-                    except InvalidArgument:
-                        raise
-                    
-                    response = self.dm.treatResult(result)
+                        response = self.dm.treatResult(result)
 
-                    # Acionamento
-                    for i, action in enumerate(response['actions']):
-                        self.dm.do (action, response['parameters'][i])
+                        # Acionamento
+                        for i, action in enumerate(response['actions']):
+                            self.dm.do (action, response['parameters'][i])
+                        # Resposta falada
+                        if response['answer'] and not SILENT_MODE:
+                            self.tts.speak(response['answer'])
 
-                    # Resposta
-                    if response['answer'] and not SILENT_MODE:
-                        self.tts.speak(response['answer'])
+                        wait_keyword = response['end_conversation']
+
+                    except Exception as e:
+                        print("[Client] Erro ao tentar detectar a inteção: ", e)
                     
-                    wait_keyword = response['end_conversation']
+                    
 
             except KeyboardInterrupt:
                 print ("\n[Client] Parando cliente")
