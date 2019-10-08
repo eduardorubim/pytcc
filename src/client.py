@@ -30,12 +30,15 @@ class Client:
         while True:
 
             try:
-                if wait_keyword:
-                    self.asr.waitKeyword()
-                text_to_be_analyzed = self.asr.listen()
+                if SILENT_MODE:
+                    text_to_be_analyzed = input("[Client] SILENT MODE: ")
+                else:
+                    if wait_keyword:
+                        self.asr.waitKeyword()
+                    text_to_be_analyzed = self.asr.listen()
 
                 if not text_to_be_analyzed:
-                    print("[Client]Nada reconhecido")
+                    print("[Client] Nada reconhecido")
                     continue
                 else:
                     text_input = dialogflow.types.TextInput(
@@ -54,13 +57,13 @@ class Client:
                         self.dm.do (action, response['parameters'][i])
 
                     # Resposta
-                    if response['answer']:
+                    if response['answer'] and not SILENT_MODE:
                         self.tts.speak(response['answer'])
                     
                     wait_keyword = response['end_conversation']
 
             except KeyboardInterrupt:
-                print ("\n[Client]Parando cliente")
+                print ("\n[Client] Parando cliente")
                 break
 
 

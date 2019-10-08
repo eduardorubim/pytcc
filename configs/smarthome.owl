@@ -148,7 +148,7 @@
 <SmartDevice rdf:about="#GarageLight1">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
   <isSmartDeviceOf rdf:resource="#Garage"/>
-  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isOn>
 </SmartDevice>
 
 <Names rdf:about="#GarageNames">
@@ -166,7 +166,7 @@
 <SmartDevice rdf:about="#GardenLight1">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
   <isSmartDeviceOf rdf:resource="#Garden"/>
-  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isOn>
+  <isOn rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isOn>
 </SmartDevice>
 
 <Names rdf:about="#GardenNames">

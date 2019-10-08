@@ -11,22 +11,22 @@ class DialogManager:
 
     def __init__(self):
         # Carrega as informacoes da memoria semantica (+ episodica)
-        self.onto = get_ontology("file://pytcc/configs/smarthome.owl").load(reload = True)
-        onto_path.append("pytcc/configs/")
+        self.onto = get_ontology("file://configs/smarthome.owl").load(reload = True)
+        onto_path.append("configs/")
 
-        # Guarda o proximo id na lista de rotinas a ser usado
-        self.keep_conversation = False
-        with open (ROUTINES_JSON_PATH, 'w') as jfile:
+        with open (ROUTINES_JSON_PATH, 'r+') as jfile:
             try:
                 self.data = json.load(jfile)
                 self.id = self.data['size'] - 1
-            except:
+            except Exception as e:
+                print("* Overwriting routines file:", e)
+                print("  Please, clean the Dialogflow project.")
                 self.id = 0
                 self.data = {"size": 1, "routines": []}
                 self.data['routines'].append({
+                    # vide DialogManager.treatResult()
                     "actions": [],
-                    "devices": [],
-                    "places": []
+                    "parameters": []
                 })
                 json.dump(self.data, jfile)
 
@@ -182,12 +182,12 @@ class DialogManager:
 
     def do (self, action, parameters):
         if action.endswith(".on"):
-            for sm_name in parameters['devices'][0]:
-                for p_name in parameters['places'][0]:
+            for sm_name in parameters['devices']:
+                for p_name in parameters['places']:
                     self.turnOnFromSmartDeviceNamePlaceName(sm_name, p_name)
         elif action.endswith(".off"):
-            for sm_name in parameters['devices'][0]:
-                for p_name in parameters['places'][0]:
+            for sm_name in parameters['devices']:
+                for p_name in parameters['places']:
                     self.turnOffFromSmartDeviceNamePlaceName(sm_name, p_name)
         else:
             pass # outra acao 
@@ -200,14 +200,17 @@ class DialogManager:
     """
     def treatResult (self, result):
 
+        # variável de retorno
         ret = {
-            "actions": [],
-            "parameters": [{
-                "devices": [],
-                "places": []
-            }],
-            "answer": None,
-            "end_conversation": True
+            "actions": [],              # array de ações a serem executadas
+            "parameters": [             # array com os parâmetros correspondentes a cada ação
+                #{            
+                    #"devices": [],     # array dos dispositivos da respectiva ação
+                    #"places": []       # array dos lugares da respectiva ação
+                #}
+            ],
+            "answer": None,             # resposta a ser falada (passada ao tts)
+            "end_conversation": True    # flag para pedir a keyword de novo no próximo comando
         }
 
         print("[DialogManager] Query text:", result.query_result.query_text)
@@ -220,10 +223,12 @@ class DialogManager:
         # Ativar/desativar um 'device' em um 'place'
         if main_action.startswith("device."):
             ret['actions'].append(main_action)
-            ret['parameters'][0]['devices'].append(self._list2array(result.query_result.parameters.fields['device'].list_value))
-            ret['parameters'][0]['places'].append(self._list2array(result.query_result.parameters.fields['place'].list_value))
-            print("                device:", ret['parameters'][0]['devices'][0])
-            print("                place :", ret['parameters'][0]['places'][0])
+            ret['parameters'].append({
+                "devices": self._list2array(result.query_result.parameters.fields['device'].list_value),
+                "places": self._list2array(result.query_result.parameters.fields['place'].list_value)
+            })
+            print("                device:", ret['parameters'][0]['devices'])
+            print("                place :", ret['parameters'][0]['places'])
 
         # Criar uma rotina
         elif main_action.startswith("routine."):
@@ -231,30 +236,32 @@ class DialogManager:
             if main_action.endswith(".create"):
                 print ("[DialogManager] Criando rotina id:", self.id)
                 with open (ROUTINES_JSON_PATH, 'w') as jfile:
-                    try:
+                    try: # tenta limpar se houver alguma coisa
                         self.data['routines'][self.id]['actions'] = []
-                        self.data['routines'][self.id]['devices'] = []
-                        self.data['routines'][self.id]['places'] = []
-                    except:
+                        self.data['routines'][self.id]['parameters'] = []
+                    except: # não existe a estrutura nesse id
                         self.data['routines'].append({
                             "actions": [],
-                            "devices": [],
-                            "places": []
+                            "parameters": []
                         })
                     json.dump(self.data, jfile)
 
             elif main_action.endswith("on.command"):
                 with open (ROUTINES_JSON_PATH, 'w') as jfile:
                     self.data['routines'][self.id]['actions'].append("devices.on")
-                    self.data['routines'][self.id]['devices'].append(self._list2array(result.query_result.parameters.fields['device'].list_value))
-                    self.data['routines'][self.id]['places'].append(self._list2array(result.query_result.parameters.fields['place'].list_value))
+                    self.data['routines'][self.id]['parameters'].append({
+                        "devices": self._list2array(result.query_result.parameters.fields['device'].list_value),
+                        "places": self._list2array(result.query_result.parameters.fields['place'].list_value)
+                    })
                     json.dump(self.data, jfile)
 
             elif main_action.endswith("off.command"):
                 with open (ROUTINES_JSON_PATH, 'w') as jfile:
                     self.data['routines'][self.id]['actions'].append("devices.off")
-                    self.data['routines'][self.id]['devices'].append(self._list2array(result.query_result.parameters.fields['device'].list_value))
-                    self.data['routines'][self.id]['places'].append(self._list2array(result.query_result.parameters.fields['place'].list_value))
+                    self.data['routines'][self.id]['parameters'].append({
+                        "devices": self._list2array(result.query_result.parameters.fields['device'].list_value),
+                        "places": self._list2array(result.query_result.parameters.fields['place'].list_value)
+                    })
                     json.dump(self.data, jfile)
 
             elif main_action.endswith("finish"):
@@ -265,7 +272,7 @@ class DialogManager:
                 display_name = "smarthome.user.command." + str(self.id)
                 training_phrases_parts = [command]
                 action = display_name + ":" + command.replace(' ', '-')
-                print("[DialogManager] Tentando criar finalizar criação da rotina:")
+                print("[DialogManager] Tentando finalizar criação da rotina:")
                 print("                Nome da rotina:", display_name)
                 print("                Frase de ativação:", command)
                 print("                Código da ação:", action)
@@ -276,6 +283,7 @@ class DialogManager:
                         self.data['size'] += 1
                         json.dump(self.data, jfile)
                 except Exception as e:
+                    ret['answer'] = "Não foi possível criar a rotina"
                     print("[DialogManager] Não foi possível criar a rotina:")
                     print("               ", e)
             
@@ -284,35 +292,46 @@ class DialogManager:
 
             elif main_action.endswith(".delete.command"):
                 command = result.query_result.parameters.fields['phrase'].string_value
-                try:
+                try: # AINDA NÃO ESTÁ COMPLETO
                     self.deleteCommand(command)
                     self.id -= 1
                     with open (ROUTINES_JSON_PATH, 'w') as jfile:
                         self.data['size'] = self.data['size'] - 1 if self.id > 0 else 1
                         json.dump(self.data, jfile)
                 except Exception as e:
+                    ret['answer'] = "Não foi possível deletar essa rotina"
                     print("[DialogManager] Não foi possível deletar a rotina:")
                     print("               ", e)
         
         # Rotinas criadas
-        # elif ret['action'].startswith("user.command."):
-            # ret.append([])
-            # for id in lista_de_rotinas:
-                # if id == "resto da coisa padronizada especial":
-                    # ret[1] = [id.device_name, """ id.place_names """  ]
-                    # break
-                
+        elif main_action.startswith("smarthome.user.command."):
+            # procura o id da rotina na lista de rotinas (o ultimo id liberado é desconsiderado)
+            for id_routine in range(self.data['size'] - 1):
+                if (main_action.split('.')[3].startswith(str(id_routine))):
+                    ret['actions'] = self.data['routines'][id_routine]['actions']
+                    ret['parameters'] = self.data['routines'][id_routine]['parameters']
+                    break
+        
+        # Fallback
+        elif main_action.endswith(".cancel"):
+            pass
 
-        # Nada
-        else:
-            print(result)
+        #else:
+        #    print(result)
 
-        # Texto para resposta falada
-        ret['answer'] = result.query_result.fulfillment_text
+        # Texto para resposta falada (o texto do DialogManager tem prioridade)
+        if not ret['answer']:
+            ret['answer'] = result.query_result.fulfillment_text
         print("[DialogManager] Fulfillment text:", ret['answer'])
 
         # Finalizar conversa?
         ret['end_conversation'] = result.query_result.diagnostic_info.fields['end_conversation'].bool_value
+        print("[DialogManager] End conversation:", ret['end_conversation'])
+
+        # Contexto
+        print("[DialogManager] Context:")
+        for context in result.query_result.output_contexts:
+            print("               ", context.name)
 
         return ret
 
@@ -333,7 +352,6 @@ class DialogManager:
     def createIntent(self, project_id, display_name, training_phrases_parts, action):
         intents_client = dialogflow.IntentsClient()
 
-        message_texts = ["Rotina executada"]
         parent = intents_client.project_agent_path(project_id)
         training_phrases = []
         for training_phrases_part in training_phrases_parts:
@@ -342,14 +360,12 @@ class DialogManager:
             training_phrase = dialogflow.types.Intent.TrainingPhrase(parts=[part])
             training_phrases.append(training_phrase)
 
-        text = dialogflow.types.Intent.Message.Text(text=message_texts)
-        message = dialogflow.types.Intent.Message(text=text)
-
         intent = dialogflow.types.Intent(
             display_name=display_name,
             training_phrases=training_phrases,
             action=action,
-            messages=[message])
+            messages=[],
+            end_interaction=True)
 
         response = intents_client.create_intent(parent, intent, language_code='pt-BR')
 
@@ -370,16 +386,18 @@ class DialogManager:
     """
     def deleteCommand(self, command):
         intents_client = dialogflow.IntentsClient()
+        path = ""
 
         parent = intents_client.project_agent_path(DIALOGFLOW_PROJECT_ID)
         intents = intents_client.list_intents(parent)
         
+        # procurando a intent cuja acao confere com a do comando dito
         for intent in intents:
             if intent.action.endswith(":" + command.replace(' ', '-')):
-                self.delete_intent(DIALOGFLOW_PROJECT_ID, intent.name)
-                return
+                path = '/'.join(intent.name.split('/')[4:]) # formatando para projects/*/agent/intents/*
+                break
 
-        print("[DialogManager] Commando não encontrado")
+        self.delete_intent(DIALOGFLOW_PROJECT_ID, path)
 
 
     """
