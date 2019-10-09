@@ -21,11 +21,11 @@ Note que, para sistemas MAC OS X, o módulo [playsound](https://pypi.org/project
 
 ## Credenciais do Dialogflow
 
-Deve-se gerar as credenciais do agente Dialogflow periodicamente e colocá-las em no diretório `/pytcc/credentials/`, alterando o nome no inicializador de `Client` apropriadamente.
+Deve-se gerar as credenciais do agente Dialogflow periodicamente e colocá-las no diretório `/pytcc/credentials/`, alterando o nome no inicializador de `Client` apropriadamente.
 
 ## Simulador
 
-O simulador se encontra em `_simulation.py`. É possível observar mudanças no esquema simplificado da residência em tempo real. Execute-o com Python:
+O simulador se encontra em `_simulation.py`. É possível observar mudanças no esquema simplificado da residência em tempo real. É possível executá-lo manualmente com Python (se não abrir automaticamente):
 
 ```sh
 $ python _simulation.py

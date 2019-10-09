@@ -180,7 +180,7 @@ class DialogManager:
 
     #################### FUNCAO DUMMY DA API DE ACIONAMENTO ####################
 
-    def do (self, action, parameters):
+    def do(self, action, parameters):
         if action.endswith(".on"):
             for sm_name in parameters['devices']:
                 for p_name in parameters['places']:
@@ -210,7 +210,7 @@ class DialogManager:
                 #}
             ],
             "answer": None,             # resposta a ser falada (passada ao tts)
-            "end_conversation": True    # flag para pedir a keyword de novo no próximo comando
+            "end_conversation": None    # flag para pedir a keyword de novo no próximo comando
         }
 
         print("[DialogManager] Query text:", result.query_result.query_text)
@@ -222,10 +222,13 @@ class DialogManager:
 
         # Ativar/desativar um 'device' em um 'place'
         if main_action.startswith("device."):
+            devices = self._list2array(result.query_result.parameters.fields['device'].list_value)
+            places = self._list2array(result.query_result.parameters.fields['place'].list_value)
+            ret['answer'] = self._checkPlacesSmartDevices(places, devices)
             ret['actions'].append(main_action)
             ret['parameters'].append({
-                "devices": self._list2array(result.query_result.parameters.fields['device'].list_value),
-                "places": self._list2array(result.query_result.parameters.fields['place'].list_value)
+                "devices": devices,
+                "places": places
             })
             print("                device:", ret['parameters'][0]['devices'])
             print("                place :", ret['parameters'][0]['places'])
@@ -247,22 +250,30 @@ class DialogManager:
                     json.dump(self.data, jfile)
 
             elif main_action.endswith("on.command"):
-                with open (ROUTINES_JSON_PATH, 'w') as jfile:
-                    self.data['routines'][self.id]['actions'].append("devices.on")
-                    self.data['routines'][self.id]['parameters'].append({
-                        "devices": self._list2array(result.query_result.parameters.fields['device'].list_value),
-                        "places": self._list2array(result.query_result.parameters.fields['place'].list_value)
-                    })
-                    json.dump(self.data, jfile)
+                devices = self._list2array(result.query_result.parameters.fields['device'].list_value)
+                places = self._list2array(result.query_result.parameters.fields['place'].list_value)
+                ret['answer'] = self._checkPlacesSmartDevices(places, devices)
+                if not ret['answer']:
+                    with open (ROUTINES_JSON_PATH, 'w') as jfile:
+                        self.data['routines'][self.id]['actions'].append("devices.on")
+                        self.data['routines'][self.id]['parameters'].append({
+                            "devices": devices,
+                            "places": places
+                        })
+                        json.dump(self.data, jfile)
 
             elif main_action.endswith("off.command"):
-                with open (ROUTINES_JSON_PATH, 'w') as jfile:
-                    self.data['routines'][self.id]['actions'].append("devices.off")
-                    self.data['routines'][self.id]['parameters'].append({
-                        "devices": self._list2array(result.query_result.parameters.fields['device'].list_value),
-                        "places": self._list2array(result.query_result.parameters.fields['place'].list_value)
-                    })
-                    json.dump(self.data, jfile)
+                devices = self._list2array(result.query_result.parameters.fields['device'].list_value)
+                places = self._list2array(result.query_result.parameters.fields['place'].list_value)
+                ret['answer'] = self._checkPlacesSmartDevices(places, devices)
+                if not ret['answer']:
+                    with open (ROUTINES_JSON_PATH, 'w') as jfile:
+                        self.data['routines'][self.id]['actions'].append("devices.off")
+                        self.data['routines'][self.id]['parameters'].append({
+                            "devices": devices,
+                            "places": places
+                        })
+                        json.dump(self.data, jfile)
 
             elif main_action.endswith("finish"):
                 pass
@@ -311,6 +322,7 @@ class DialogManager:
                 if (main_action.split('.')[3].startswith(str(id_routine))):
                     ret['actions'] = self.data['routines'][id_routine]['actions']
                     ret['parameters'] = self.data['routines'][id_routine]['parameters']
+                    ret['end_conversation'] = True
                     break
         
         # Fallback
@@ -325,8 +337,9 @@ class DialogManager:
             ret['answer'] = result.query_result.fulfillment_text
         print("[DialogManager] Fulfillment text:", ret['answer'])
 
-        # Finalizar conversa?
-        ret['end_conversation'] = result.query_result.diagnostic_info.fields['end_conversation'].bool_value
+        # Finalizar conversa? (o DialogManager tem prioridade)
+        if ret['end_conversation'] == None:
+            ret['end_conversation'] = result.query_result.diagnostic_info.fields['end_conversation'].bool_value
         print("[DialogManager] End conversation:", ret['end_conversation'])
 
         # Contexto
@@ -337,13 +350,33 @@ class DialogManager:
         return ret
 
     """
-    Transforma list_value em um vetor Python
+    Transforma list_value em um vetor Python (array)
     """
     def _list2array(self, list_value):
         array = []
         for value in list_value:
             array.append(value)
         return array
+
+    """
+    Verifica se os locais (String array) ou os dispositivos (String array) existem.
+    Retorna a frase (String) correspondente para ret['answer'], None se encontrados
+    """
+    def _checkPlacesSmartDevices(self, places, devices):
+        answer = ""
+        for place in places:
+            place_obj = self.getPlaceFromName(place)
+            if place_obj:
+                for device in devices:
+                    if not self.getSmartDevicesFromNamePlace(device, place_obj):
+                        answer = "Dispositivo não encontrado"
+                        devices = []
+                        break
+            else:
+                answer = "Local não encontrado"
+                places = []
+                break
+        return answer
 
     #################### FUNCOES PARA API DO DIALOGFLOW ####################
 
@@ -365,8 +398,7 @@ class DialogManager:
             display_name=display_name,
             training_phrases=training_phrases,
             action=action,
-            messages=[],
-            end_interaction=True)
+            messages=[])
 
         response = intents_client.create_intent(parent, intent, language_code='pt-BR')
 
@@ -413,28 +445,26 @@ class DialogManager:
 
         for intent in intents:
             print (intents_client.get_intent(intent.name, language_code='pt-BR'))
-            """
-            print('=' * 20)
-            print('Intent name: {}'.format(intent.name))
-            print('Intent display_name: {}'.format(intent.display_name))
-            print('Action: {}\n'.format(intent.action))
-            print('Root followup intent: {}'.format(
-                intent.root_followup_intent_name))
-            print('Parent followup intent: {}\n'.format(
-                intent.parent_followup_intent_name))
+            # print('=' * 20)
+            # print('Intent name: {}'.format(intent.name))
+            # print('Intent display_name: {}'.format(intent.display_name))
+            # print('Action: {}\n'.format(intent.action))
+            # print('Root followup intent: {}'.format(
+            #     intent.root_followup_intent_name))
+            # print('Parent followup intent: {}\n'.format(
+            #     intent.parent_followup_intent_name))
 
-            print('Input contexts:')
-            for input_context_name in intent.input_context_names:
-                print('\tName: {}'.format(input_context_name))
+            # print('Input contexts:')
+            # for input_context_name in intent.input_context_names:
+            #     print('\tName: {}'.format(input_context_name))
 
-            print('Output contexts:')
-            for output_context in intent.output_contexts:
-                print('\tName: {}'.format(output_context.name))
+            # print('Output contexts:')
+            # for output_context in intent.output_contexts:
+            #     print('\tName: {}'.format(output_context.name))
 
-            print('Training Phrases:')
-            for phrase in intent.training_phrases:
-                print('\tPhrase: {}'.format(phrase))
-                """
+            # print('Training Phrases:')
+            # for phrase in intent.training_phrases:
+            #     print('\tPhrase: {}'.format(phrase))
 
 
 if __name__ == "__main__":

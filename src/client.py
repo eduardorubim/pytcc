@@ -31,7 +31,7 @@ class Client:
 
             try:
                 if SILENT_MODE:
-                    text_to_be_analyzed = input("[Client] <-- ")
+                    text_to_be_analyzed = input("[Client] <-- ").lower()
                 else:
                     if wait_keyword:
                         self.asr.waitKeyword()
@@ -60,9 +60,8 @@ class Client:
                         wait_keyword = response['end_conversation']
 
                     except Exception as e:
-                        print("[Client] Erro ao tentar detectar a inteção: ", e)
-                    
-                    
+                        print("[Client] Erro ao tentar detectar a inteção:")
+                        print("        ", e)
 
             except KeyboardInterrupt:
                 print ("\n[Client] Parando cliente")

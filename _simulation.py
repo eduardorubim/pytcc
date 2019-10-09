@@ -1,4 +1,5 @@
 import os
+import time
 import pygame
 import pygame.gfxdraw
 from src.dm import DialogManager
@@ -114,7 +115,8 @@ class Simulation:
         pygame.display.flip()
         try:
             while 1:
-                event = pygame.event.wait()
+                event = pygame.event.poll()
+                time.sleep(1)
                 if event.type == pygame.QUIT:
                     break
                 if event.type == pygame.KEYDOWN:
@@ -122,11 +124,12 @@ class Simulation:
                         break
                 new_date = os.stat("configs/smarthome.owl")[8]
                 if new_date > last_mod_date:
-                    print("Refresh!")
                     last_mod_date = new_date
                     self.refresh()
                     self.drawSmartHome()
                 pygame.display.flip()
+        except KeyboardInterrupt:
+            pass
         finally:
             pygame.quit()
 

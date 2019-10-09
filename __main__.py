@@ -1,5 +1,13 @@
-from src.client import Client
-# config
-client = Client()
+import subprocess
 
-client.run()
+# config
+
+try:
+    simulation = subprocess.Popen(["python", "_simulation.py"])
+
+    from src.client import Client
+    client = Client()
+    client.run()
+
+finally:
+    simulation.terminate()
