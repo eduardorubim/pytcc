@@ -21,7 +21,7 @@ Note que, para sistemas MAC OS X, o módulo [playsound](https://pypi.org/project
 
 ## Credenciais do Dialogflow
 
-Deve-se gerar as credenciais do agente Dialogflow periodicamente e colocá-las no diretório `/pytcc/credentials/`, alterando o nome no inicializador de `Client` apropriadamente.
+Deve-se gerar as credenciais do agente Dialogflow periodicamente e colocá-las no diretório `/pytcc/credentials/`, alterando o nome em `pytcc/src/globals.py` apropriadamente.
 
 ## Simulador
 
