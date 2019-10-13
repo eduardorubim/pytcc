@@ -280,7 +280,7 @@ class DialogManager:
 
             elif main_action.endswith("finish.command"):
                 command = result.query_result.parameters.fields['phrase'].string_value
-                display_name = "smarthome.user.command." + str(self.id)
+                display_name = "user.command." + str(self.id)
                 training_phrases_parts = [command]
                 action = display_name + ":" + command.replace(' ', '-')
                 print("[DialogManager] Tentando finalizar criação da rotina:")
@@ -316,7 +316,7 @@ class DialogManager:
                     print("               ", e)
         
         # Rotinas criadas
-        elif main_action.startswith("smarthome.user.command."):
+        elif main_action.startswith("user.command."):
             # procura o id da rotina na lista de rotinas (o ultimo id liberado é desconsiderado)
             for id_routine in range(self.data['size'] - 1):
                 if (main_action.split('.')[3].startswith(str(id_routine))):
