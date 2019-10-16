@@ -319,7 +319,7 @@ class DialogManager:
         elif main_action.startswith("user.command."):
             # procura o id da rotina na lista de rotinas (o ultimo id liberado é desconsiderado)
             for id_routine in range(self.data['size'] - 1):
-                if (main_action.split('.')[3].startswith(str(id_routine))):
+                if (main_action.split('.')[2].startswith(str(id_routine))):
                     ret['actions'] = self.data['routines'][id_routine]['actions']
                     ret['parameters'] = self.data['routines'][id_routine]['parameters']
                     ret['end_conversation'] = True
