@@ -43,6 +43,10 @@ class Simulation:
     com seus dispositivos (SmartDevice) e seus estados
     """
     def drawPlace(self, surface, place):
+        # Dispositivos do local
+        devices = self.smarthome.getPlaceSmartDevices(place)
+        n_devs = len(devices)
+
         # Desenhando o rótulo
         text_s = self.font.render(self.smarthome.getPlaceNames(place)[0], True, (0,0,0))
         surface.blit(text_s, (self.space, self.space))
@@ -51,8 +55,7 @@ class Simulation:
                                 (0, 0, self.unit_width, self.unit_height),
                                 (0, 0, 0))
         # Dividindo o lugar para colocar os dispositivos
-        devices = self.smarthome.getPlaceSmartDevices(place)
-        n_devs = len(devices)
+        
         n_cols = int(n_devs ** 0.5 + 0.5)
         n_rows = n_devs // n_cols + (n_devs % n_cols > 0)
         horz_space = self.unit_width // (n_cols+1)
