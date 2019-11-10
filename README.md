@@ -25,10 +25,10 @@ Deve-se gerar as credenciais do agente Dialogflow periodicamente e colocá-las n
 
 ## Simulador
 
-O simulador se encontra em `_simulation.py`. É possível observar mudanças no esquema simplificado da residência em tempo real. É possível executá-lo manualmente com Python (se não abrir automaticamente):
+O simulador se encontra em `_simulation.py`. É possível observar mudanças no esquema simplificado da residência em tempo real. Para chamar a aplicação com o simulador:
 
 ```sh
-$ python _simulation.py
+$ python . SIMULATE
 ```
 
 ## Exportando entidades para o Dialogflow

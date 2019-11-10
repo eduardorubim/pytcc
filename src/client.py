@@ -12,10 +12,12 @@ from src.globals import *
 Módulo Cliente Minerva
 """
 class Client:
-    def __init__(self):
+    def __init__(self, sim_stdin):
         self.asr = ASR()
         self.tts = TTS()
         self.dm = DM()
+
+        self.output = sim_stdin
 
         # TODO: isso deve ir pra config, preferencialmente num JSON
         self.SESSION_ID = 'tcc-chatbot'
@@ -49,10 +51,23 @@ class Client:
                     try:
                         result = session_client.detect_intent(session=session, query_input=query_input)
                         response = self.dm.treatResult(result)
+                        #response = {
+                        #    "actions": [1,1,1,1,1,1,1,1,1],
+                        #    "answer": None,
+                        #    "end_conversation": True
+                        #    }
 
                         # Acionamento
-                        for i, action in enumerate(response['actions']):
-                            self.dm.do (action, response['parameters'][i])
+                        if SIMULATION:
+                            #a = str(response['actions']) + '\n'
+                            a = input("Digite:")
+                            self.output.write(bytes(a, "ascii"))
+                            self.output.flush()
+                            self.output.seek(0)
+                        else:
+                            # Implementação real de acionamento
+                            print("[Client] Acionamento:", response['actions'])
+
                         # Resposta falada
                         if response['answer'] and not SILENT_MODE:
                             self.tts.speak(response['answer'])
@@ -67,6 +82,5 @@ class Client:
                 print ("\n[Client] Parando cliente")
                 break
 
-
-
-    
+def _send_data_to(proc, inp):
+    proc.communicate(inp)
