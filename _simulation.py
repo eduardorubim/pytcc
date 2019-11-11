@@ -101,7 +101,7 @@ class Driver:
                 s.listen()
                 conn, addr = s.accept()
                 with conn:
-                    print("[Driver] Conectado:", addr)
+                    #print("[Driver] Conectado:", addr)
                     while True:
                         data = conn.recv(1024)
                         if not data:
@@ -124,10 +124,10 @@ class Driver:
         pygame.display.flip()
         try:
             while True:
-                print("________")
+                #print("________")
                 if refresh:
                     next_state = str(q.get().decode()).strip()
-                    print("[Driver] Acionamento:", next_state)
+                    #print("[Driver] Acionamento:", next_state)
                     if next_state:
                         # Input do tipo "[-1,0,1]. -1: desliga, 0: mantém, 1: liga"
                         next_state = [int(x) for x in next_state[1:len(next_state)-1].split(',')]
