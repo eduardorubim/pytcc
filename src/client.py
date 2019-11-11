@@ -76,6 +76,3 @@ class Client:
             except KeyboardInterrupt:
                 print ("\n[Client] Parando cliente")
                 break
-
-    def f(q):
-        q.put()
