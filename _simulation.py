@@ -1,7 +1,11 @@
 import pygame
+import socket
+from multiprocessing import Process, Queue
+
 from src.sm import SemanticMemory
-import fileinput
-import time
+
+HOST = '127.0.0.1'
+PORT = 31415
 
 class Driver:
 
@@ -52,7 +56,7 @@ class Driver:
                     self.cursor['Y'] -= self.margin
                     self.cursor['X'] += self.margin
                 except Exception as e:
-                    print("drawHome error:", e)
+                    print("[Driver] drawHome error:", e)
             # Próxima linha (para imprimir EXTERIOR)
             self.cursor['X'] = 0
             self.cursor['Y'] += (self.place_unit_size + 2*self.margin)
@@ -88,30 +92,48 @@ class Driver:
             self.cursor['X'] += self.place_unit_size
 
     """
+    Socket listener
+    """
+    def f(self, q):
+        while True: # precisa reabrir o socket toda vez
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind((HOST, PORT))
+                s.listen()
+                conn, addr = s.accept()
+                with conn:
+                    print("[Driver] Conectado:", addr)
+                    while True:
+                        data = conn.recv(1024)
+                        if not data:
+                            break
+                        else:
+                            #print("[Driver] Recebido:", data)
+                            q.put(data)
+    """
     Roda a simulacao
     """
     def run(self):
-        refresh = False
 
-        next_state = self.state
+        q = Queue()
+        p = Process(target=self.f, args=(q,))
+        p.start()
+
+        refresh = False
+        next_state = str(self.state)
         self.drawHome()
         pygame.display.flip()
         try:
-            while 1:
+            while True:
+                print("________")
                 if refresh:
-                    try:
-                        line = input()
-                        next_state = line.strip()
-                        #print("[Acionamento]", line)
-                    except Exception as e:
-                        next_state = str(self.state)
-                        time.sleep(1)
-                    # assumindo input do tipo "0,1,-1"
-                    next_state = [int(x) for x in next_state[1:len(next_state)-1].split(',')]
-                    # -1: desliga, 0: mantém, 1: liga
-                    for i in range(len(self.state)):
-                        if next_state[i]:
-                            self.state[i] = next_state[i]
+                    next_state = str(q.get().decode()).strip()
+                    print("[Driver] Acionamento:", next_state)
+                    if next_state:
+                        # Input do tipo "[-1,0,1]. -1: desliga, 0: mantém, 1: liga"
+                        next_state = [int(x) for x in next_state[1:len(next_state)-1].split(',')]
+                        for i in range(len(self.state)):
+                            if next_state[i]:
+                                self.state[i] = next_state[i]
                 refresh = not refresh
                 self.drawHome()
                 pygame.display.flip()
@@ -119,12 +141,10 @@ class Driver:
         except KeyboardInterrupt:
             pass
         except Exception as e:
-            print("run error:", e)
+            print("[Driver] run error:", e)
         finally:
             pygame.quit()
 
 if __name__ == '__main__':
-    #simul = Simulation()
-    #simul.run()
     driver = Driver()
     driver.run()
