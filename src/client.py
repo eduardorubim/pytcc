@@ -60,8 +60,8 @@ class Client:
                                 s.connect((HOST, PORT))
                                 s.sendall(a)
                         else:
-                            # Implementação real de acionamento
-                            print("[Client] Acionamento:", response['actions'])
+                            pass # Implementação real de acionamento
+                        print("[Client] Acionamento:", response['actions'])
 
                         # Resposta falada
                         if response['answer'] and not SILENT_MODE:
