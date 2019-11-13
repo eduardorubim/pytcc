@@ -14,7 +14,6 @@ class DialogManager:
         # Carrega as informacoes da memoria semantica (+ episodica)
         self.sm = SemanticMemory()
         self.num_of_dev = self.sm.getNumberOfDevices()
-        self.em = [0 for _ in range(self.num_of_dev)]
 
         with open (ROUTINES_JSON_PATH, 'r+') as jfile:
             try:
@@ -37,7 +36,7 @@ class DialogManager:
 
         # variável de retorno
         ret = {
-            "actions": self.em,         # array de ações a serem executadas (default mantém o mesmo estado)
+            "actions": [0 for _ in range(self.num_of_dev)],   # array de ações a serem executadas
             "answer": None,             # resposta a ser falada (passada ao tts)
             "end_conversation": None    # flag para pedir a keyword de novo no próximo comando
         }
@@ -76,9 +75,9 @@ class DialogManager:
                     print ("[DialogManager] Criando rotina id:", self.id)
                     with open (ROUTINES_JSON_PATH, 'w') as jfile:
                         try: # tenta limpar se houver alguma coisa
-                            self.data['routines'][self.id] = [-1 for _ in range(self.num_of_dev)]
+                            self.data['routines'][self.id] = [0 for _ in range(self.num_of_dev)]
                         except: # não existe a estrutura nesse id
-                            self.data['routines'].append([-1 for _ in range(self.num_of_dev)])
+                            self.data['routines'].append([0 for _ in range(self.num_of_dev)])
                         json.dump(self.data, jfile)
 
                 elif main_action[last] == "on" or main_action[last] == "off":
