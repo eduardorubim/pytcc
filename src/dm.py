@@ -13,6 +13,8 @@ class DialogManager:
     def __init__(self):
         # Carrega as informacoes da memoria semantica (+ episodica)
         self.sm = SemanticMemory()
+        self.num_of_dev = self.sm.getNumberOfDevices()
+        self.em = [0 for _ in range(self.num_of_dev)]
 
         with open (ROUTINES_JSON_PATH, 'r+') as jfile:
             try:
@@ -23,7 +25,7 @@ class DialogManager:
                 print("  Please, clean the Dialogflow project.")
                 self.id = 0
                 self.data = {"size": 1, "routines": []}
-                self.data['routines'].append([0 for i in self.sm.devices_id])
+                self.data['routines'].append([0 for _ in range(self.num_of_dev)])
                 json.dump(self.data, jfile)
 
     #################### FUNCOES PARA TRATAR O RESULTADO ####################
@@ -35,14 +37,14 @@ class DialogManager:
 
         # variável de retorno
         ret = {
-            "actions": [0 for i in self.sm.devices_id],   # array de ações a serem executadas
-            "answer": None,                               # resposta a ser falada (passada ao tts)
-            "end_conversation": None                      # flag para pedir a keyword de novo no próximo comando
+            "actions": self.em,         # array de ações a serem executadas (default mantém o mesmo estado)
+            "answer": None,             # resposta a ser falada (passada ao tts)
+            "end_conversation": None    # flag para pedir a keyword de novo no próximo comando
         }
 
         cmd = {
-            "on" :  1,
-            "off": -1
+            "on" : 1,
+            "off": 0
         }
 
         print("[DialogManager] Query text:", result.query_result.query_text)
@@ -60,7 +62,8 @@ class DialogManager:
             for place_s in places:
                 for device_s in devices:
                     device = self.sm.getSmartDeviceFromNames(device_s, place_s)
-                    ret['actions'][self.sm.getSmartDeviceIndex(device)] = cmd[main_action[last]] # on/off
+                    self.em[self.sm.getSmartDeviceIndex(device)] = cmd[main_action[last]] # on/off
+            ret['actions'] = self.em
             print("                device:", devices)
             print("                place :", places)
 
@@ -73,9 +76,9 @@ class DialogManager:
                     print ("[DialogManager] Criando rotina id:", self.id)
                     with open (ROUTINES_JSON_PATH, 'w') as jfile:
                         try: # tenta limpar se houver alguma coisa
-                            self.data['routines'][self.id] = [0 for i in self.sm.devices_id]
+                            self.data['routines'][self.id] = [-1 for _ in range(self.num_of_dev)]
                         except: # não existe a estrutura nesse id
-                            self.data['routines'].append([0 for i in self.sm.devices_id])
+                            self.data['routines'].append([-1 for _ in range(self.num_of_dev)])
                         json.dump(self.data, jfile)
 
                 elif main_action[last] == "on" or main_action[last] == "off":
@@ -136,7 +139,10 @@ class DialogManager:
             # procura o id da rotina na lista de rotinas (o ultimo id liberado é desconsiderado)
             for routine_id in range(self.data['size'] - 1):
                 if (main_action[last].startswith(str(routine_id))):
-                    ret['actions'] = self.data['routines'][routine_id]
+                    for i, act in enumerate(self.data['routines'][routine_id]):
+                        if act != -1:
+                            self.em[i] = act
+                    ret['actions'] = self.em
                     ret['end_conversation'] = True
                     break
         
