@@ -37,8 +37,8 @@ class DialogManager:
         # variável de retorno
         ret = {
             "actions": [0 for _ in range(self.num_of_dev)],   # array de ações a serem executadas
-            "answer": None,             # resposta a ser falada (passada ao tts)
-            "end_conversation": None    # flag para pedir a keyword de novo no próximo comando
+            "answer": None,                               # resposta a ser falada (passada ao tts)
+            "end_conversation": None                      # flag para pedir a keyword de novo no próximo comando
         }
 
         cmd = {
