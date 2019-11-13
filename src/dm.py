@@ -43,7 +43,7 @@ class DialogManager:
 
         cmd = {
             "on" : 1,
-            "off": 0
+            "off": -1
         }
 
         print("[DialogManager] Query text:", result.query_result.query_text)
@@ -61,8 +61,7 @@ class DialogManager:
             for place_s in places:
                 for device_s in devices:
                     device = self.sm.getSmartDeviceFromNames(device_s, place_s)
-                    self.em[self.sm.getSmartDeviceIndex(device)] = cmd[main_action[last]] # on/off
-            ret['actions'] = self.em
+                    ret['actions'][self.sm.getSmartDeviceIndex(device)] = cmd[main_action[last]] # on/off
             print("                device:", devices)
             print("                place :", places)
 
@@ -138,10 +137,7 @@ class DialogManager:
             # procura o id da rotina na lista de rotinas (o ultimo id liberado é desconsiderado)
             for routine_id in range(self.data['size'] - 1):
                 if (main_action[last].startswith(str(routine_id))):
-                    for i, act in enumerate(self.data['routines'][routine_id]):
-                        if act != -1:
-                            self.em[i] = act
-                    ret['actions'] = self.em
+                    ret['actions'] = self.data['routines'][routine_id]
                     ret['end_conversation'] = True
                     break
         
